@@ -18,29 +18,70 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.rememberNavController
+import com.example.androiddevchallenge.data.Dog
+import com.example.androiddevchallenge.data.DogData
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyTheme {
-                MyApp()
+            MyApp {
+                AppNavigator()
             }
         }
     }
 }
 
-// Start building your app here!
 @Composable
-fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+fun AppNavigator() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController, startDestination = "dogListView",
+        builder = {
+            composable("dogListView") { DogListView(DogData.list, navController = navController) }
+            composable(
+                "dogDetailsView/{dog}",
+                arguments = listOf(
+                    navArgument("dog") {
+                        // Prefer to pass NavType.ParcelableType but this is crash so we pass json string as work around
+                        type = NavType.StringType
+                    }
+                )
+            ) { backStackEntry ->
+                backStackEntry.arguments?.getString("dog")?.let { json ->
+                    val dog = Gson().fromJson(json, Dog::class.java)
+                    DogDetailsView(dog = dog, navController = navController)
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun MyApp(content: @Composable () -> Unit) {
+    MyTheme {
+        Surface {
+            content()
+        }
+    }
+}
+
+@Preview("MyScreen preview")
+@Composable
+fun DefaultPreview() {
+    MyApp {
+        AppNavigator()
     }
 }
 
@@ -48,7 +89,9 @@ fun MyApp() {
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp()
+        MyApp {
+            AppNavigator()
+        }
     }
 }
 
@@ -56,6 +99,8 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
-        MyApp()
+        MyApp {
+            AppNavigator()
+        }
     }
 }
