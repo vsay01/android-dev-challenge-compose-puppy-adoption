@@ -10,4 +10,5 @@
       the License.
       -->
     <string name="app_name">AndroidDevChallenge</string>
+    <string name="cd_navigate_up">Navigate Up</string>
 </resources>
