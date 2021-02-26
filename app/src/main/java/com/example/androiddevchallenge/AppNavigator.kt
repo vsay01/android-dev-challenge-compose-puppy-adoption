@@ -15,12 +15,7 @@
  */
 package com.example.androiddevchallenge
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,19 +23,9 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.data.Dog
 import com.example.androiddevchallenge.data.DogData
-import com.example.androiddevchallenge.ui.theme.MyTheme
+import com.example.androiddevchallenge.ui.screens.DogDetailsView
+import com.example.androiddevchallenge.ui.screens.DogListView
 import com.google.gson.Gson
-
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MyApp {
-                AppNavigator()
-            }
-        }
-    }
-}
 
 @Composable
 fun AppNavigator() {
@@ -66,41 +51,4 @@ fun AppNavigator() {
             }
         }
     )
-}
-
-@Composable
-fun MyApp(content: @Composable () -> Unit) {
-    MyTheme {
-        Surface {
-            content()
-        }
-    }
-}
-
-@Preview("MyScreen preview")
-@Composable
-fun DefaultPreview() {
-    MyApp {
-        AppNavigator()
-    }
-}
-
-@Preview("Light Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun LightPreview() {
-    MyTheme {
-        MyApp {
-            AppNavigator()
-        }
-    }
-}
-
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun DarkPreview() {
-    MyTheme(darkTheme = true) {
-        MyApp {
-            AppNavigator()
-        }
-    }
 }
